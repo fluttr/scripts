@@ -1,6 +1,16 @@
+#Requires -Version 5
+# Script will write to stdout formatted tracklist for i.e. youtube
+# Now supports only manual pasta format from bandcamp, like
+# 1.
+# Whatever title - just whatever 01:23
+# 2.
+# ...
+
+# Usage: .\youtube_tracklist_generator.ps1 -BandcampPastaMode -Path .\path\to\pasta\from.bandcamp.txt
+
 param(
   [parameter(Mandatory=$true)][string]$Path,
-  [switch]$BandcampPastaMode  # TODO : переделать параметр в $Mode с ValidateSet
+  [parameter(Mandatory=$true)][switch]$BandcampPastaMode  # TODO : change parameter to $Mode with ValidateSet
 )
 
 class Track {
@@ -21,7 +31,7 @@ function getTracklistFromBandcampPasta([parameter(mandatory=$true)][string]$Path
     $entry -match '\d+(?=\.)' | Out-Null
     $currentTrack.Number = $Matches[0]
 
-    $entry -match '(?<=\d+\.)[\w\s\-,\.\!\:\#]+(?=\d\d\:)' | Out-Null
+    $entry -match '(?<=\d+\.).+(?=\d\d\:)' | Out-Null
     $currentTrack.Title = $Matches[0]
 
     $entry -match '\d\d\:\d\d' | Out-Null
@@ -35,9 +45,8 @@ function getTracklistFromBandcampPasta([parameter(mandatory=$true)][string]$Path
 if($BandcampPastaMode){
   $trackList = getTracklistFromBandcampPasta $Path
 }
-# TODO: elseif($SomeOtherMode){ ...
+# TODO: switch($mode){$SomeOtherMode}{ ...
 
-# напишет в stdout отформатированный для ютуба список песен в альбоме
 $totalLen = New-TimeSpan
 foreach($track in $trackList){
   Write-Output ("{0:mm}:{0:ss} $($track.Number). $($track.Title)" -f $totalLen)
