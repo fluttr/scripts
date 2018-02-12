@@ -23,7 +23,7 @@ function getTracklistFromBandcampPasta([parameter(mandatory=$true)][string]$Path
   $rx = '\d+\.\r?\n.*?\d\d\:\d\d'
   $pasta = get-content -raw "$PathToPasta"
   $entries = [regex]::Matches($pasta, $rx, "multiline")
-  $tracklist = @()
+  $trackList = @()
   foreach($entry in $entries){
     $entry = $entry.Value -replace '\r?\n',''
     $currentTrack = [Track]::new()
@@ -37,9 +37,9 @@ function getTracklistFromBandcampPasta([parameter(mandatory=$true)][string]$Path
     $entry -match '\d\d\:\d\d' | Out-Null
     $currentTrack.Length = [timespan]"00:$($Matches[0])"
 
-    $tracklist += $currentTrack
+    $trackList += $currentTrack
   }
-  Write-Output $tracklist
+  Write-Output $trackList
 }
 
 if($BandcampPastaMode){
