@@ -51,7 +51,7 @@ mkdir "$vmConfigDir","$vmImageDir"
 # Extracting Vagrant box which is gzipped tar
 . "$7zPath" x -o"$TmpDir" "$InputBoxPath"                                                                  
 $tar = gci "$TmpDir\*" -File
-. "$7zPath" x -o'.\tmp' "$tar"                                                                                                 
+. "$7zPath" x -o"$TmpDir" "$tar"                                                                                                 
 rm -Force $tar
 
 pushd "$TmpDir"
